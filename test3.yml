@@ -27,11 +27,6 @@ Parameters:
     Description: EC2 instance type (e.g., t2.micro)
     Default: t2.micro
 
-  AMIId:
-    Type: AWS::EC2::Image::Id
-    Description: The AMI ID for the EC2 instances (e.g., Amazon Linux 2)
-    Default: ami-0182f373e66f89c85
-
 Resources:
   # VPC
   VPC:
@@ -134,14 +129,16 @@ Resources:
     Properties:
       LaunchTemplateName: MyEC2LaunchTemplate
       LaunchTemplateData:
-        ImageId: !Ref AMIId
-        InstanceType: !Ref InstanceType
-        SecurityGroupIds:
-          - !Ref EC2SecurityGroup
+        ImageId: ami-0182f373e66f89c85
+        InstanceType: t2.micro
+        # SecurityGroupIds:
+        #   - !Ref EC2SecurityGroup
         NetworkInterfaces:
           - DeviceIndex: 0
             AssociatePublicIpAddress: true
             SubnetId: !Ref PublicSubnet1
+            Groups:
+              - !Ref EC2SecurityGroup
         UserData: 
           Fn::Base64: !Sub |
             #!/bin/bash
