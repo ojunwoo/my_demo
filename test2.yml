@@ -112,8 +112,7 @@ Resources:
     Properties:
       LaunchTemplateName: TestappAutoScaling
       LaunchTemplateData:
-        ImageId: ami-0bfddf4206f1fa7b9
-        # ImageId: ami-0182f373e66f89c85
+        ImageId: ami-0182f373e66f89c85
         InstanceType: t2.micro
         # KeyName: "mytestappssh"
         NetworkInterfaces: 
