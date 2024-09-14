@@ -110,7 +110,7 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     DeletionPolicy: Delete
     Properties:
-      LaunchTemplateName: TestappAutoScaling
+      LaunchTemplateName: myec2template
       LaunchTemplateData:
         ImageId: ami-0182f373e66f89c85
         InstanceType: t2.micro
@@ -148,8 +148,8 @@ Resources:
       MaxSize: '2'
       DesiredCapacity: '2'
       LaunchTemplate:
-        LaunchTemplateId: !Ref TestappCloudFormationLaunchTemplate
-        Version: !GetAtt TestappCloudFormationLaunchTemplate.LatestVersionNumber
+        LaunchTemplateId: !Ref myec2template
+        Version: !GetAtt myec2template.LatestVersionNumber
       HealthCheckType: ELB
       HealthCheckGracePeriod: 300
       VPCZoneIdentifier:
