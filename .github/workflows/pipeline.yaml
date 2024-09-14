@@ -71,7 +71,7 @@ jobs:
       - name: Deploy CloudFormation stack
         run: |
           aws cloudformation deploy \
-          --template-file test2.yml \
+          --template-file test3.yml \
           --stack-name demo-stack2 \
       #   --s3-bucket pipline-test-bucket \
 
