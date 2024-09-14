@@ -72,7 +72,7 @@ jobs:
         run: |
           aws cloudformation deploy \
           --template-file test2.yml \
-          --stack-name demo-stack4 \
+          --stack-name demo-stack \
       #   --s3-bucket pipline-test-bucket \
 
 
