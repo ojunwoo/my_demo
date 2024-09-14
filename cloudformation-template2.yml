@@ -102,9 +102,9 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       InstanceType: "t2.micro"
-      ImageId: "ami-0bfddf4206f1fa7b9"
+      ImageId: "ami-0182f373e66f89c85"
       SubnetId: !Ref PublicSubnet1
-      KeyName: "my-key-pair"  
+      # KeyName: "my-key-pair"  
       SecurityGroupIds:
         - !Ref SecurityGroup
       Tags:
@@ -133,9 +133,9 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       InstanceType: "t2.micro"
-      ImageId: "ami-0bfddf4206f1fa7b9"
+      ImageId: "ami-0182f373e66f89c85"
       SubnetId: !Ref PublicSubnet2
-      KeyName: "my-key-pair"  
+      # KeyName: "my-key-pair"  
       SecurityGroupIds:
         - !Ref SecurityGroup
       Tags:
