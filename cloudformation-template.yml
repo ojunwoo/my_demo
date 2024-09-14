@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Deploy EC2 instance in a VPC using CloudFormation
+
+
+
+Resources:
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: "Name"
+          Value: "MyVPC"
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "MyInternetGateway"
+
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: "Name"
+          Value: "MyRouteTable"
+
+  PublicRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.0.1.0/24"
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select [ 0, !GetAZs "" ]
+      Tags:
+        - Key: "Name"
+          Value: "MyPublicSubnet"
+
+  SubnetRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref RouteTable
+
+  SecurityGroup:
+     Type: "AWS::EC2::SecurityGroup"
+     Properties:
+       GroupDescription: "Enable SSH and HTTP access"
+       VpcId: !Ref VPC
+       SecurityGroupIngress:
+         - IpProtocol: tcp
+           FromPort: 22
+           ToPort: 22
+           CidrIp: 0.0.0.0/0
+         - IpProtocol: tcp
+           FromPort: 80
+           ToPort: 80
+           CidrIp: 0.0.0.0/0
+           
+
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.micro"
+      ImageId: "ami-0bfddf4206f1fa7b9"
+      SubnetId: !Ref PublicSubnet
+      KeyName: "my-key-pair"  
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      Tags:
+        - Key: "Name"
+          Value: "Test"
+      UserData: 
+        Fn::Base64: !Sub |
+            #!/bin/bash
+            #Update system
+            sudo dnf update -y
+            
+            #Install docker
+            sudo dnf install docker -y
+
+            #start and enable docker
+            sudo systemctl start docker
+            sudo systemctl enable docker
+
+            # Pull docker image
+            sudo docker pull ojunwoo/testapp_1
+
+            # Run the docker container and expose port 80
+            sudo docker run -d -p 80:80 ojunwoo/testapp_1
+
+            
+
+
