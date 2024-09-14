@@ -136,7 +136,6 @@ Resources:
       LaunchTemplateData:
         ImageId: !Ref AMIId
         InstanceType: !Ref InstanceType
-        KeyName: !Ref KeyPairName
         SecurityGroupIds:
           - !Ref EC2SecurityGroup
         NetworkInterfaces:
